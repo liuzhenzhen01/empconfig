@@ -1,0 +1,42 @@
+spring:
+  profiles:
+    active: dev
+server:
+  port: 8093
+---  
+spring:
+  profile: dev
+  application: 
+    name: emp-zuul
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8092/eureka/
+  instance:
+    instance-id: ${spring.cloud.client.ipAddress}:${spring.application.name}:${spring.application.instance_id:${server.port}}
+
+zuul:
+  routes:
+    apiemp:
+      path: /**
+      service-id: emp-consumer #从emp-consumer拿服务
+  ignored-services: '*' #忽略的服务    
+---
+
+spring:
+  profile: test
+  application: 
+    name: emp-zuul
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8092/eureka/
+  instance:
+    instance-id: ${spring.cloud.client.ipAddress}:${spring.application.name}:${spring.application.instance_id:${server.port}}
+
+zuul:
+  routes:
+    apiemp:
+      path: /**
+      service-id: emp-consumer #从emp-consumer拿服务
+  ignored-services: '*' #忽略的服务        
